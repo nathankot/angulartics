@@ -81,7 +81,7 @@ angular.module('angulartics', [])
     $analytics.pageTrack($location.path());
   }
   if ($analytics.settings.pageTracking.autoTrackVirtualPages) {
-    $rootScope.$on('$routeChangeSuccess', function (event, current) {
+    $rootScope.$on('$locationChangeSuccess', function (event, current) {
       if (current && (current.$$route||current).redirectTo) return;
       var url = $analytics.settings.pageTracking.basePath + $location.url();
       $analytics.pageTrack(url);
