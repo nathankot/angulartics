@@ -22,16 +22,17 @@ angulartics.waitForVendorApi = function (objectName, delay, registerFn) {
  */
 angular.module('angulartics', [])
 .provider('$analytics', function () {
-  var settings = { 
-    pageTracking: { 
+  var settings = {
+    pageTracking: {
       autoTrackFirstPage: true,
       autoTrackVirtualPages: true,
+      trackRelativePath: false,
       basePath: '',
-      bufferFlushDelay: 1000 
+      bufferFlushDelay: 1000
     },
     eventTracking: {
       bufferFlushDelay: 1000
-    } 
+    }
   };
 
   var cache = {
@@ -78,7 +79,11 @@ angular.module('angulartics', [])
 
 .run(['$rootScope', '$location', '$analytics', function ($rootScope, $location, $analytics) {
   if ($analytics.settings.pageTracking.autoTrackFirstPage) {
-    $analytics.pageTrack($location.path());
+    if ($analytics.settings.trackRelativePath) {
+        $analytics.pageTrack($location.url());
+    } else {
+	$analytics.pageTrack($location.absUrl());
+    }
   }
   if ($analytics.settings.pageTracking.autoTrackVirtualPages) {
     $rootScope.$on('$locationChangeSuccess', function (event, current) {
